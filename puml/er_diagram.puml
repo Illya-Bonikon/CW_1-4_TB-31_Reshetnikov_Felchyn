@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 12
+skinparam roundCorner 6
+
+entity "HostPCProfile" as Host {
+  * id : Long <<PK>>
+  --
+  * hostName : String
+  * ipAddress : String
+  * port : Int
+  * lastConnected : Long
+}
+
+entity "DeviceSession" as Session {
+  * sessionToken : String <<PK>>
+  --
+  * hostId : Long <<FK>>
+  * deviceName : String
+  * authTime : Long
+  * isActive : Boolean
+}
+
+entity "UserPreference" as Pref {
+  * id : Long <<PK>>
+  --
+  * sensitivity : Float
+  * acceleration : Boolean
+  * smoothingFactor : Float
+  * reverseScroll : Boolean
+}
+
+entity "MacroPreset" as Macro {
+  * macroId : String <<PK>>
+  --
+  * title : String
+  * keySequence : String
+  * iconType : String
+  * category : String
+}
+
+Host ||--o{ Session : "ініціює"
+Host ||--|| Pref : "визначає"
+Host ||--o{ Macro : "містить"
+@enduml

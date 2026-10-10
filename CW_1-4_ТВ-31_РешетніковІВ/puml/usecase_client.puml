@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 12
+skinparam packageStyle rectangle
+skinparam roundCorner 8
+
+left to right direction
+
+:Користувач смартфона: as User
+:Серверний процес ПК: as Server
+
+rectangle "Система RemotePad (Мобільний клієнт)" {
+  (UC-1: Пошук ПК та авторизація за PIN) as UC1
+  (UC-2: Жестове керування курсором) as UC2
+  (UC-3: Екранне введення тексту та гарячі клавіші) as UC3
+  (UC-4: Виконання макросів та медіа-дій) as UC4
+  (UC-5: Моніторинг RTT та автоперепідключення) as UC5
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+
+UC1 --> Server
+UC2 --> Server
+UC3 --> Server
+UC4 --> Server
+UC5 --> Server
+@enduml
