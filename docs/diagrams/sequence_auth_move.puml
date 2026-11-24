@@ -1,0 +1,55 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam sequenceMessageAlign center
+hide footbox
+
+actor "Користувач" as User
+participant "ConnectScreen /\nTouchpadScreen" as UI
+participant "ConnectViewModel /\nControlViewModel" as VM
+participant "GestureTranslator,\nMoveAccumulator" as Input
+participant "WebSocket-\nConnection" as Conn
+participant "ControlServer,\nPacketHandler" as Server
+participant "AwtRobot-\nInputDevice" as Robot
+
+== Авторизація ==
+User -> UI : вибір ПК, введення PIN
+UI -> VM : connect()
+VM -> Conn : connect(target, pin, deviceName)
+Conn -> Server : відкриття WebSocket /control
+Conn -> Server : AUTH_REQUEST (PIN)
+Server -> Server : PinAuthenticator.verify()\nSessionRegistry.open()
+alt PIN правильний
+  Server --> Conn : AUTH_RESPONSE (токен, ім'я ПК)
+  Conn --> VM : AuthResult.Success
+  VM -> VM : збереження HostPCProfile\nі DeviceSession у Room
+  VM --> UI : перехід на екран керування
+else PIN хибний або тайм-аут 3 с
+  Server --> Conn : AUTH_RESPONSE (помилка)
+  Conn --> VM : Rejected / Unreachable
+  VM --> UI : підсвічування поля PIN, вібровідгук
+end
+
+== Керування курсором ==
+loop кожен кадр, поки палець на екрані
+  User -> UI : рух пальця
+  UI -> VM : onDrag(dx, dy)
+  VM -> Input : move() із чутливістю\nі прискоренням, add()
+end
+loop кожні 8 мс
+  VM -> Input : drain()
+  VM -> Conn : send(MOUSE_MOVE)
+  Conn -> Server : MOUSE_MOVE + токен
+  Server -> Server : CursorSmoother.next()
+  Server -> Robot : moveBy(dx, dy)
+end
+
+== Контроль зв'язку ==
+loop кожні 2 с
+  Conn -> Server : PING (час відправлення)
+  Server --> Conn : PONG (той самий час)
+  Conn -> Conn : RttTracker.onPong()
+end
+@enduml

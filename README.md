@@ -1,63 +1,49 @@
-# RemotePad — Система використання смартфона як периферійного пристрою введення для ПК
+# RemotePad
 
-Даний репозиторій містить монорепозиторій проєкту курсової роботи студентів групи ТВ-31 кафедри ІПЗЕ НТУУ «КПІ ім. Ігоря Сікорського»:
-- **Решетніков Ілля Володимирович** — Клієнтська частина (Android / Jetpack Compose / Gestures / UI-UX).
-- **Фельчин Микола Борисович** — Серверна частина (Desktop Daemon / Kotlin Ktor / AWT Robot HID / Security).
+Курсова робота з дисципліни «Розробка програмного забезпечення мобільних пристроїв», група ТВ-31, НТУУ «КПІ ім. Ігоря Сікорського».
 
----
+RemotePad перетворює Android-смартфон на бездротові тачпад, клавіатуру і пульт для презентацій. Телефон і ПК мають бути в одній локальній мережі.
 
-## 1. Архітектура та структура репозиторію
+- Решетніков Ілля Володимирович: клієнтська частина, модуль `mobile-client`.
+- Фельчин Микола Борисович: серверна частина, модуль `pc-server`.
+
+## Структура
 
 ```text
-├── shared-protocol/     # Спільний модуль моделей даних, констант та протоколу серіалізації
-│   └── src/main/kotlin/com/remotepad/protocol/
-│       └── ProtocolModels.kt
-├── mobile-client/       # Клієнтський Android-застосунок (Kotlin, Jetpack Compose, Coroutines)
-│   └── src/main/kotlin/com/remotepad/client/
-│       └── TouchpadScreen.kt
-├── pc-server/           # Серверний сервіс для ПК (Kotlin, Ktor, WebSockets/UDP, java.awt.Robot)
-│   └── src/main/kotlin/com/remotepad/server/
-│       └── RemotePadServer.kt
-├── docs/                # Звіти та пояснювальні записки до курсової роботи (ДСТУ 3008:2015)
-│   ├── CW_1-4_ТВ-31_РешетніковІВ.docx
-│   ├── CW_1-4_ТВ-31_ФельчинМБ.docx
-│   ├── CW_1-4_ТВ-31_РешетніковІВ.zip
-│   └── CW_1-4_ТВ-31_ФельчинМБ.zip
-├── .gitignore
-└── README.md
+shared-protocol/   спільні моделі пакетів, коди клавіш, кодування JSON
+mobile-client/     Android-застосунок (Kotlin, Jetpack Compose, Room, DataStore, OkHttp)
+pc-server/         сервер для ПК (Kotlin, Ktor WebSocket, UDP-пошук, java.awt.Robot)
+docs/              звіти до пунктів 1-4 і діаграми PlantUML (docs/diagrams)
 ```
 
----
+Докладніше про будову системи: [ARCHITECTURE.md](ARCHITECTURE.md).
 
-## 2. Технологічний стек
+## Запуск
 
-* **Спільний протокол (`shared-protocol`):** Kotlin Multiplatform ready, `kotlinx.serialization` (JSON / CBOR бінарні пакети), енуми типів подій та кодів дій.
-* **Мобільний клієнт (`mobile-client`):** Android 8.0+ (API 26+), Jetpack Compose, Kotlin Coroutines & Flow, Ktor HTTP/WebSocket Client, Android Sensors & Multi-touch Gestures (`PointerInputScope`).
-* **ПК-сервер (`pc-server`):** Kotlin JVM 17+, Ktor Asynchronous Server Engine (CIO / Netty), WebSockets / Datagram UDP Sockets, JNA / `java.awt.Robot` для низькорівневої емуляції системного введення (Mouse & Keyboard HID).
+Потрібен JDK 17. Для клієнта ще Android SDK (найпростіше відкрити корінь репозиторію в Android Studio).
 
----
+Сервер на ПК:
 
-## 3. Особливості реалізації
-
-1. **Мінімальна затримка (Low Latency):** Використання неблокуючих сокетів та оптимізованого бінарного/компактного JSON-формату для обробки сенсорних пакетів із затримкою < 10 мс у локальній мережі Wi-Fi.
-2. **Алгоритм згладжування курсора (Cursor Smoothing):** Сервер реалізує експоненційне згладжування (EMA / Exponential Moving Average) для демпфування тремтіння пальця при мікропереміщеннях.
-3. **Безпека підключення:** Двоетапна автентифікація через PIN-код або QR-код з обмеженням кількості сесій та перевіркою валідності IP-адрес клієнтів.
-4. **Багатофункціональність:** Режими тачпада (1 палець — переміщення/клік, 2 пальці — скролінг/правий клік, 3 пальці — перемикання вікон), повнорозмірної клавіатури, медіа-пульта та програмованої макро-панелі.
-
----
-
-## 4. Збірка та запуск
-
-### Запуск сервера на ПК:
 ```bash
-cd pc-server
-./gradlew run
+./gradlew :pc-server:run                   # порт 8080, випадковий PIN
+./gradlew :pc-server:run --args="8080 4812"  # свій порт і PIN
 ```
-Сервер автоматично виводить IP-адресу в LAN, порт (за замовчуванням `8080`) та згенерований 4-значний PIN-код для підключення.
 
-### Збірка мобільного клієнта:
+Сервер виводить свої адреси в локальній мережі та PIN.
+
+Клієнт:
+
 ```bash
-cd mobile-client
-./gradlew assembleDebug
+./gradlew :mobile-client:installDebug   # на підключений телефон
+./gradlew :mobile-client:assembleDebug  # лише APK у mobile-client/build/outputs/apk/debug
 ```
-Встановіть отриманий `.apk` файл на мобільний пристрій або запустіть безпосередньо через Android Studio.
+
+Після запуску застосунок сам шукає сервер у мережі. Якщо пошук заблоковано брандмауером, IP-адресу можна ввести вручну.
+
+## Тести
+
+```bash
+./gradlew test
+```
+
+Юніт-тести є в усіх трьох модулях. У `mobile-client` тест `ScreenshotTest` рендерить екрани через Paparazzi без емулятора. GitHub Actions на кожен push запускає тести, збирає APK і сервер та рендерить діаграми з `docs/diagrams`.

@@ -1,0 +1,47 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam componentStyle rectangle
+skinparam roundCorner 6
+
+node "Смартфон (Android 8.0+)" as Phone {
+  package "mobile-client" {
+    [UI (Jetpack Compose):\nConnectScreen, TouchpadScreen,\nKeyboardScreen, MediaScreen,\nMacrosScreen, SettingsScreen] as UI
+    [ViewModel:\nConnectViewModel,\nControlViewModel,\nSettingsViewModel] as VM
+    [Обробка введення:\nGestureTranslator,\nMoveAccumulator, KeyChordParser] as Input
+    [Мережа:\nWebSocketConnection,\nHostDiscovery, RttTracker] as Net
+    [Дані:\nRoom (SQLite), DataStore] as Data
+  }
+  [shared-protocol\n(InputEventPacket, PacketCodec)] as ProtoC
+}
+
+node "Персональний комп'ютер (JVM 17)" as PC {
+  package "pc-server" {
+    [ControlServer\n(Ktor, WebSocket)] as WS
+    [DiscoveryResponder\n(UDP)] as UDP
+    [PacketHandler] as Handler
+    [PinAuthenticator,\nSessionRegistry] as Auth
+    [CursorSmoother] as Smooth
+    [AwtRobotInputDevice] as Robot
+  }
+  [shared-protocol] as ProtoS
+}
+
+[Операційна система:\nкурсор і клавіатура] as OS
+
+UI --> VM : події користувача
+VM --> Input
+VM --> Net
+VM --> Data
+Net ..> ProtoC : кодування JSON
+Net --> WS : WebSocket ws://IP:8080/control
+Net --> UDP : UDP broadcast :8080
+WS --> Handler
+WS ..> ProtoS
+Handler --> Auth
+Handler --> Smooth
+Handler --> Robot
+Robot --> OS : java.awt.Robot
+@enduml

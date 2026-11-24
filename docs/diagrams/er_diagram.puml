@@ -1,0 +1,49 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+hide circle
+
+rectangle "Room (SQLite)" {
+  entity "HostPCProfile\nтаблиця host_profiles" as Host {
+    * id : Long <<PK>>
+    --
+    * hostName : String
+    * ipAddress : String
+    * port : Int
+    * lastConnected : Long
+    унікальний індекс (ipAddress, port)
+  }
+
+  entity "DeviceSession\nтаблиця device_sessions" as Session {
+    * sessionToken : String <<PK>>
+    --
+    * hostId : Long <<FK>>
+    * deviceName : String
+    * authTime : Long
+    * isActive : Boolean
+  }
+
+  entity "MacroPreset\nтаблиця macro_presets" as Macro {
+    * macroId : String <<PK>>
+    --
+    * title : String
+    * keySequence : String
+    * iconType : String
+    * category : String
+  }
+}
+
+rectangle "DataStore Preferences" {
+  entity "UserPreference" as Pref {
+    sensitivity : Float
+    acceleration : Boolean
+    smoothingFactor : Float
+    reverseScroll : Boolean
+  }
+}
+
+Host ||--o{ Session : "1 : *  (каскадне видалення)"
+@enduml

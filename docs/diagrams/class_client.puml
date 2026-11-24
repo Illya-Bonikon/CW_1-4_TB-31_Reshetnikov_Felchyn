@@ -1,0 +1,111 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 12
+skinparam classAttributeIconSize 0
+hide empty members
+left to right direction
+
+package "ui" {
+  class ConnectViewModel {
+    +state : StateFlow<ConnectUiState>
+    +savedHosts : StateFlow<List<HostPCProfile>>
+    +search()
+    +onPinChange(value : String)
+    +connect(onSuccess : () -> Unit)
+  }
+  class ControlViewModel {
+    +status : StateFlow<ConnectionStatus>
+    +rttMs : StateFlow<Long?>
+    +onDrag(dx : Float, dy : Float)
+    +onScroll(dy : Float)
+    +onTap(pointers : Int)
+    +sendText(text : String)
+    +pressKey(keyCode : Int, modifiers : Int)
+    +runMacro(preset : MacroPreset)
+    +disconnect()
+  }
+  class SettingsViewModel {
+    +preference : StateFlow<UserPreference>
+    +setSensitivity(value : Float)
+    +setReverseScroll(enabled : Boolean)
+  }
+}
+
+package "input" {
+  class GestureTranslator {
+    +preference : UserPreference
+    +move(dx : Float, dy : Float) : Delta
+    +scroll(dy : Float) : Int
+    +tap(pointers : Int) : MouseButton
+  }
+  class MoveAccumulator {
+    +add(delta : Delta)
+    +drain() : Delta?
+    +clear()
+  }
+  class KeyChordParser <<object>> {
+    +parse(sequence : String) : KeyChord?
+  }
+  class PinValidator <<object>> {
+    +sanitize(raw : String) : String
+    +isComplete(pin : String) : Boolean
+  }
+}
+
+package "network" {
+  interface RemotePadConnection {
+    +status : StateFlow<ConnectionStatus>
+    +rttMs : StateFlow<Long?>
+    +connect(target, pin, deviceName) : AuthResult
+    +send(packet : InputEventPacket) : Boolean
+    +disconnect()
+  }
+  class WebSocketConnection
+  class RttTracker {
+    +onPong(sentAtMs : Long, receivedAtMs : Long) : Long
+  }
+  class HostDiscovery {
+    +discover() : List<DiscoveredHost>
+  }
+}
+
+package "data" {
+  class SettingsRepository {
+    +preferences : Flow<UserPreference>
+    +update(transform)
+  }
+  class UserPreference <<data>> {
+    sensitivity : Float
+    acceleration : Boolean
+    smoothingFactor : Float
+    reverseScroll : Boolean
+  }
+  class RemotePadDatabase {
+    +hosts() : HostPCProfileDao
+    +sessions() : DeviceSessionDao
+    +macros() : MacroPresetDao
+  }
+}
+
+class AppContainer
+
+AppContainer *-- RemotePadDatabase
+AppContainer *-- SettingsRepository
+AppContainer *-- RemotePadConnection
+AppContainer *-- HostDiscovery
+
+WebSocketConnection ..|> RemotePadConnection
+WebSocketConnection *-- RttTracker
+
+ConnectViewModel --> AppContainer
+ConnectViewModel ..> PinValidator
+ControlViewModel --> AppContainer
+ControlViewModel *-- GestureTranslator
+ControlViewModel *-- MoveAccumulator
+ControlViewModel ..> KeyChordParser
+SettingsViewModel --> SettingsRepository
+SettingsRepository ..> UserPreference
+GestureTranslator --> UserPreference
+@enduml
