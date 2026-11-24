@@ -20,6 +20,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // звіт JaCoCo для юніт-тестів: createDebugUnitTestCoverageReport
+            enableUnitTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -77,5 +81,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
+    // справжній сервер для наскрізного тесту на loopback
+    testImplementation(project(":pc-server"))
     debugImplementation(libs.androidx.ui.tooling)
 }

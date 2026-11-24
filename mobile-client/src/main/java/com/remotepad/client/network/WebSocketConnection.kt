@@ -169,7 +169,7 @@ class WebSocketConnection(
                     return@launch
                 }
             }
-            _status.value = ConnectionStatus.Lost("Зв'язок із ПК втрачено. Перевірте Wi-Fi або введіть IP вручну")
+            _status.value = ConnectionStatus.Lost(LOST_MESSAGE)
         }
     }
 
@@ -192,5 +192,6 @@ class WebSocketConnection(
         private const val RECONNECT_DELAY_MS = 1000L
         private const val MAX_RECONNECTS = 3
         private const val NORMAL_CLOSURE = 1000
+        private const val LOST_MESSAGE = "Зв'язок із ПК втрачено. Перевірте Wi-Fi або введіть IP вручну"
     }
 }

@@ -36,13 +36,17 @@ class ControlViewModel(private val container: AppContainer) : ViewModel() {
 
     init {
         viewModelScope.launch { container.database.macros().insertAll(DefaultMacros.all) }
-        viewModelScope.launch { container.settings.preferences.collect { translator.preference = it } }
+        viewModelScope.launch {
+            container.settings.preferences.collect { translator.preference = it }
+        }
         viewModelScope.launch {
             status.collect { if (it !is ConnectionStatus.Connected) dropPendingInput() }
         }
         viewModelScope.launch {
             while (isActive) {
-                moves.drain()?.let { send(InputEventPacket(type = EventType.MOUSE_MOVE, deltaX = it.x, deltaY = it.y)) }
+                moves.drain()?.let { (dx, dy) ->
+                    send(InputEventPacket(EventType.MOUSE_MOVE, deltaX = dx, deltaY = dy))
+                }
                 delay(MOVE_FLUSH_MS)
             }
         }

@@ -219,6 +219,7 @@ private fun PinField(pin: String, isError: Boolean, onChange: (String) -> Unit) 
                         index == pin.length -> MaterialTheme.colorScheme.primary
                         else -> MaterialTheme.colorScheme.secondary
                     }
+                    val digit = pin.getOrNull(index)?.toString().orEmpty()
                     Surface(
                         shape = RoundedCornerShape(10.dp),
                         border = BorderStroke(2.dp, borderColor),
@@ -226,7 +227,7 @@ private fun PinField(pin: String, isError: Boolean, onChange: (String) -> Unit) 
                         modifier = Modifier.size(56.dp)
                     ) {
                         Box(contentAlignment = Alignment.Center) {
-                            Text(pin.getOrNull(index)?.toString() ?: "", fontSize = 24.sp)
+                            Text(digit, fontSize = 24.sp)
                         }
                     }
                 }

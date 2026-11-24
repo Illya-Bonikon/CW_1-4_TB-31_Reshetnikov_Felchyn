@@ -46,6 +46,13 @@ net/     ControlServer (Ktor), PacketHandler (логіка без мережі),
 
 Див. [README.md](README.md). CI (`.github/workflows/build.yml`) запускає `./gradlew test :pc-server:installDist :mobile-client:assembleDebug` і публікує APK та звіти тестів як артефакти.
 
+## Тести
+
+- юніт-тести в усіх трьох модулях;
+- `ScreenshotTest` (Paparazzi): рендер усіх екранів, у тому числі в альбомній орієнтації;
+- `LoopbackLatencyTest`: справжній `WebSocketConnection` проти справжнього `ControlServer` на 127.0.0.1. Тест перевіряє авторизацію і доставку подій, а також міряє затримку та пропускну здатність і пише результат у `mobile-client/build/measurements/loopback.json`;
+- покриття коду клієнта: `./gradlew :mobile-client:createDebugUnitTestCoverageReport` (JaCoCo).
+
 ## Результати
 
-Застосунок збирається в APK, сервер у дистрибутив `pc-server/build/install`. Усі юніт-тести трьох модулів і тести знімків екранів проходять у GitHub Actions. Затримку на реальній мережі ще треба виміряти, це заплановано на наступні пункти курсової.
+Застосунок збирається в APK, сервер у дистрибутив `pc-server/build/install`. Усі тести проходять у GitHub Actions; заміри затримки, покриття і знімки екранів публікуються як артефакти `measurements` і `screenshots`. Заміри на loopback показують лише програмну частину затримки, час мережі Wi-Fi до них не входить.

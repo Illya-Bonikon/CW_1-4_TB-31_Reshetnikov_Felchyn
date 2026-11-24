@@ -46,4 +46,4 @@ docs/              звіти до пунктів 1-4 і діаграми PlantU
 ./gradlew test
 ```
 
-Юніт-тести є в усіх трьох модулях. У `mobile-client` тест `ScreenshotTest` рендерить екрани через Paparazzi без емулятора. GitHub Actions на кожен push запускає тести, збирає APK і сервер та рендерить діаграми з `docs/diagrams`.
+Юніт-тести є в усіх трьох модулях. У `mobile-client` тест `ScreenshotTest` рендерить екрани через Paparazzi без емулятора, а `LoopbackLatencyTest` перевіряє клієнт разом зі справжнім сервером і міряє затримку. GitHub Actions на кожен push запускає тести, збирає APK і сервер та рендерить діаграми з `docs/diagrams`.

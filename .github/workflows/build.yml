@@ -19,7 +19,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Tests, server and APK
-        run: ./gradlew --no-daemon --stacktrace test :pc-server:installDist :mobile-client:assembleDebug :mobile-client:recordPaparazziDebug
+        run: ./gradlew --no-daemon --stacktrace test :pc-server:installDist :mobile-client:assembleDebug :mobile-client:recordPaparazziDebug :mobile-client:createDebugUnitTestCoverageReport
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -33,6 +33,15 @@ jobs:
         with:
           name: screenshots
           path: mobile-client/src/test/snapshots/images/*.png
+
+      # заміри наскрізного тесту на loopback і покриття коду клієнта
+      - name: Upload measurements and coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: measurements
+          path: |
+            mobile-client/build/measurements/*.json
+            mobile-client/build/reports/coverage/test/debug/report.xml
 
       - name: Upload test reports
         if: always()

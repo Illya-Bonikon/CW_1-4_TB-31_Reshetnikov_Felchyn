@@ -2,6 +2,7 @@ package com.remotepad.client.ui
 
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
+import com.android.resources.ScreenOrientation
 import androidx.compose.runtime.Composable
 import com.remotepad.client.data.UserPreference
 import com.remotepad.client.data.local.DefaultMacros
@@ -73,6 +74,13 @@ class ScreenshotTest {
     @Test
     fun settings() = control(ControlMode.SETTINGS) {
         SettingsContent(UserPreference(sensitivity = 1.4f), {}, {}, {}, {})
+    }
+
+    @Test
+    fun touchpadLandscape() {
+        // альбомна орієнтація: перевіряю, що сенсорна зона розтягується на всю ширину
+        paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(orientation = ScreenOrientation.LANDSCAPE))
+        control(ControlMode.TOUCHPAD) { TouchpadContent({ _, _ -> }, {}, {}, {}) }
     }
 
     private fun control(mode: ControlMode, content: @Composable () -> Unit) = snap {
