@@ -1,0 +1,26 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+start
+:git push у GitHub;
+fork
+  partition "Завдання build" {
+    :JDK 17, Gradle;
+    :./gradlew test\n(юніт-тести, наскрізний тест,\nтести знімків екранів);
+    :assembleDebug, installDist;
+    :recordPaparazziDebug,\ncreateDebugUnitTestCoverageReport;
+    :артефакти: APK, знімки,\nзаміри і покриття, звіти тестів;
+  }
+fork again
+  partition "Завдання diagrams" {
+    :Graphviz і шрифти;
+    :PlantUML: docs/diagrams/*.puml → PNG;
+    :артефакт diagrams;
+  }
+end fork
+:генератор записки (локально)\nбере артефакти і будує docx;
+stop
+@enduml

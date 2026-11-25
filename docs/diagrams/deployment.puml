@@ -1,0 +1,22 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+
+node "Смартфон\nAndroid 8.0+" as Phone {
+  artifact "RemotePad.apk" as Apk
+}
+node "Wi-Fi роутер\n(локальна мережа)" as Router
+node "Персональний комп'ютер\nWindows / macOS / Linux, JDK 17" as PC {
+  artifact "pc-server\n(:pc-server:run)" as Srv
+  component "Операційна система:\nкурсор і клавіатура" as OS
+}
+
+Apk -- Router : Wi-Fi
+Router -- Srv : Ethernet або Wi-Fi
+Apk ..> Srv : UDP broadcast :8080\n(пошук)
+Apk ..> Srv : WebSocket TCP :8080\n/control (JSON)
+Srv --> OS : java.awt.Robot
+@enduml

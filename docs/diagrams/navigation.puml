@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+hide empty description
+
+state "Підключення" as Connect
+state "Керування" as Control {
+  state "Тачпад" as Touch
+  state "Клавіатура" as Keys
+  state "Медіа" as Media
+  state "Макроси" as Macros
+  state "Налаштування" as Settings
+  [*] --> Touch
+  Touch -[hidden]right-> Keys
+  Keys -[hidden]right-> Media
+  Media -[hidden]right-> Macros
+  Macros -[hidden]right-> Settings
+}
+note right of Connect : у межах «Керування» будь-який режим\nвибирається з нижньої панелі; вибір\nпереживає поворот екрана
+
+[*] --> Connect
+Connect --> Control : успішна авторизація
+Control --> Connect : відключення або\nвтрата зв'язку
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 14
+skinparam roundCorner 6
+skinparam packageStyle rectangle
+skinparam nodesep 30
+skinparam ranksep 45
+
+package "ui" as UI {
+  [connect] as C
+  [control] as K
+  [settings] as S
+  [theme] as Th
+}
+package "input" as IN {
+  [GestureTranslator\nMoveAccumulator\nKeyChordParser\nPinValidator] as I
+}
+package "network" as NET {
+  [WebSocketConnection\nHostDiscovery\nRttTracker] as N
+}
+package "data" as DATA {
+  [SettingsRepository\nRoom: сутності і DAO] as D
+}
+[AppContainer] as App
+package "shared-protocol" as P {
+  [InputEventPacket\nPacketCodec, KeyCodes] as Pr
+}
+
+UI --> IN
+UI --> NET
+UI --> DATA
+App --> NET
+App --> DATA
+IN ..> DATA : UserPreference
+IN ..> P
+NET ..> P
+App -[hidden]right-> UI
+@enduml

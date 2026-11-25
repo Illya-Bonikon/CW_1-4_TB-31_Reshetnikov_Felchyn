@@ -77,14 +77,31 @@ class ScreenshotTest {
     }
 
     @Test
+    fun touchpadReconnecting() = control(ControlMode.TOUCHPAD, ConnectionStatus.Reconnecting(2), rtt = null) {
+        TouchpadContent({ _, _ -> }, {}, {}, {})
+    }
+
+    @Test
+    fun touchpadLost() = control(
+        ControlMode.TOUCHPAD,
+        ConnectionStatus.Lost("Зв'язок із ПК втрачено. Перевірте Wi-Fi або введіть IP вручну"),
+        rtt = null
+    ) { TouchpadContent({ _, _ -> }, {}, {}, {}) }
+
+    @Test
     fun touchpadLandscape() {
         // альбомна орієнтація: перевіряю, що сенсорна зона розтягується на всю ширину
         paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(orientation = ScreenOrientation.LANDSCAPE))
         control(ControlMode.TOUCHPAD) { TouchpadContent({ _, _ -> }, {}, {}, {}) }
     }
 
-    private fun control(mode: ControlMode, content: @Composable () -> Unit) = snap {
-        ControlScaffold(connected, rtt = 6, mode = mode, onModeChange = {}, onDisconnect = {}) { content() }
+    private fun control(
+        mode: ControlMode,
+        status: ConnectionStatus = connected,
+        rtt: Long? = 6,
+        content: @Composable () -> Unit
+    ) = snap {
+        ControlScaffold(status, rtt, mode = mode, onModeChange = {}, onDisconnect = {}) { content() }
     }
 
     private fun snap(content: @Composable () -> Unit) = paparazzi.snapshot { RemotePadTheme(content) }

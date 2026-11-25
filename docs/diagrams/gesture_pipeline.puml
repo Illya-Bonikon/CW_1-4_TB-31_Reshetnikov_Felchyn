@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+start
+:Подія дотику Compose\n(awaitPointerEvent);
+:Зсув центру пальців dx, dy;
+if (Пальців на екрані?) then (один)
+  :GestureTranslator.move():\nчутливість, прискорення,\nзгладжування;
+  :MoveAccumulator.add();
+  note right: відправлення раз на 8 мс\nз ControlViewModel
+  :MOUSE_MOVE із сумою зміщень;
+else (два і більше)
+  :GestureTranslator.scroll():\nцілі клацання, залишок\nпереноситься;
+  if (Клацань ≠ 0?) then (так)
+    :MOUSE_WHEEL;
+  else (ні)
+  endif
+endif
+if (Жест закінчився коротким\nдотиком без руху?) then (так)
+  :tap(кількість пальців) →\nMOUSE_CLICK лівої, правої\nабо середньої кнопки;
+endif
+:WebSocketConnection.send():\nномер пакета і токен;
+stop
+@enduml
