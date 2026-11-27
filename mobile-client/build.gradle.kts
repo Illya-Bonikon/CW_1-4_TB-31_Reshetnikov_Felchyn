@@ -54,7 +54,9 @@ android {
         unitTests.isIncludeAndroidResources = true
     }
     sourceSets {
-        getByName("test").assets.srcDir("$projectDir/schemas")
+        // MigrationTestHelper читає схеми з assets. Robolectric бачить лише assets варіанта debug,
+        // тому схеми (кілька кілобайтів JSON) потрапляють тільки в налагоджувальну збірку
+        getByName("debug").assets.srcDir("$projectDir/schemas")
     }
     packaging {
         resources {
