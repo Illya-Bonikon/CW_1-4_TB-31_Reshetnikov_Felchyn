@@ -2,31 +2,32 @@
 skinparam monochrome true
 skinparam shadowing false
 skinparam defaultFontName "Times New Roman"
-skinparam defaultFontSize 13
+skinparam defaultFontSize 15
+skinparam ParticipantPadding 4
 skinparam roundCorner 6
 hide footbox
-participant "ConnectViewModel" as VM
-participant "CompositeHost-\nDiscovery" as C
-participant "NsdHostDiscovery\n(Android NsdManager)" as N
-participant "UdpHostDiscovery" as U
-participant "MdnsAdvertiser\n(JmDNS на ПК)" as M
-participant "DiscoveryResponder\n(UDP на ПК)" as R
+participant "Connect-\nViewModel" as VM
+participant "Composite-\nDiscovery" as C
+participant "NSD\n(телефон)" as N
+participant "UDP\n(телефон)" as U
+participant "JmDNS\n(ПК)" as M
+participant "UDP\n(ПК)" as R
 
 == Запуск сервера ==
-M -> M : registerService(\n"_remotepad._tcp.local.", порт, TXT name)
+M -> M : registerService(\n_remotepad._tcp, порт, name)
 
 == Пошук на телефоні ==
 VM -> C : discover()
 par
   C -> N : discover()
-  N -> M : mDNS запит PTR _remotepad._tcp
+  N -> M : запит PTR
   M --> N : відповідь: ім'я сервісу
-  N -> M : resolveService: SRV, TXT, A
+  N -> M : resolve: SRV, TXT, A
   M --> N : IP, порт, name
 else
   C -> U : discover()
-  U -> R : UDP broadcast REMOTEPAD_DISCOVER
-  R --> U : REMOTEPAD_HOST;ім'я;порт
+  U -> R : broadcast DISCOVER
+  R --> U : HOST;ім'я;порт
 end
 C -> C : об'єднання, без дублікатів за IP
 C --> VM : список ПК
