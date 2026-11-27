@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.client.input.GestureTranslatorTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:41:45" hostname="runnervm0hi8g" time="0.012">
+  <properties/>
+  <testcase name="tap button depends on finger count" classname="com.remotepad.client.input.GestureTranslatorTest" time="0.005"/>
+  <testcase name="smoothing damps first jerk" classname="com.remotepad.client.input.GestureTranslatorTest" time="0.003"/>
+  <testcase name="sensitivity scales movement" classname="com.remotepad.client.input.GestureTranslatorTest" time="0.0"/>
+  <testcase name="fast swipe goes further than slow one with acceleration" classname="com.remotepad.client.input.GestureTranslatorTest" time="0.001"/>
+  <testcase name="reset forgets scroll remainder" classname="com.remotepad.client.input.GestureTranslatorTest" time="0.002"/>
+  <testcase name="scroll emits whole notches and keeps the rest" classname="com.remotepad.client.input.GestureTranslatorTest" time="0.0"/>
+  <testcase name="acceleration gain is capped" classname="com.remotepad.client.input.GestureTranslatorTest" time="0.0"/>
+  <testcase name="reverse scroll flips direction" classname="com.remotepad.client.input.GestureTranslatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

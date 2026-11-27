@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.server.CursorSmootherTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:39:29" hostname="runnervm0hi8g" time="0.059">
+  <properties/>
+  <testcase name="smoothing damps a single jerk" classname="com.remotepad.server.CursorSmootherTest" time="0.019"/>
+  <testcase name="reset clears history" classname="com.remotepad.server.CursorSmootherTest" time="0.0"/>
+  <testcase name="slow movement accumulates instead of being lost" classname="com.remotepad.server.CursorSmootherTest" time="0.003"/>
+  <testcase name="without smoothing delta is scaled by sensitivity" classname="com.remotepad.server.CursorSmootherTest" time="0.001"/>
+  <testcase name="alpha outside range is rejected" classname="com.remotepad.server.CursorSmootherTest" time="0.035"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

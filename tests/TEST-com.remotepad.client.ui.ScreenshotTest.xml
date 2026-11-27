@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.client.ui.ScreenshotTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:41:51" hostname="runnervm0hi8g" time="11.189">
+  <properties/>
+  <testcase name="touchpadLandscape" classname="com.remotepad.client.ui.ScreenshotTest" time="8.623"/>
+  <testcase name="macros" classname="com.remotepad.client.ui.ScreenshotTest" time="0.426"/>
+  <testcase name="touchpad" classname="com.remotepad.client.ui.ScreenshotTest" time="0.182"/>
+  <testcase name="touchpadReconnecting" classname="com.remotepad.client.ui.ScreenshotTest" time="0.185"/>
+  <testcase name="macroEditor" classname="com.remotepad.client.ui.ScreenshotTest" time="0.513"/>
+  <testcase name="media" classname="com.remotepad.client.ui.ScreenshotTest" time="0.218"/>
+  <testcase name="touchpadLost" classname="com.remotepad.client.ui.ScreenshotTest" time="0.164"/>
+  <testcase name="keyboard" classname="com.remotepad.client.ui.ScreenshotTest" time="0.266"/>
+  <testcase name="connect" classname="com.remotepad.client.ui.ScreenshotTest" time="0.234"/>
+  <testcase name="settings" classname="com.remotepad.client.ui.ScreenshotTest" time="0.195"/>
+  <testcase name="connectWrongPin" classname="com.remotepad.client.ui.ScreenshotTest" time="0.181"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Nov 27, 2026 12:41:56 AM app.cash.paparazzi.internal.resources.AarSourceResourceRepository$Loader loadPublicResourceNames
+WARNING: Error reading /home/runner/.gradle/caches/8.9/transforms/19f33cd102730a7b5b94132cf479ea6d/transformed/firebase-messaging-24.0.3/public.txt: java.nio.file.NoSuchFileException: /home/runner/.gradle/caches/8.9/transforms/19f33cd102730a7b5b94132cf479ea6d/transformed/firebase-messaging-24.0.3/public.txt
+Nov 27, 2026 12:41:56 AM app.cash.paparazzi.internal.resources.AarSourceResourceRepository$Loader loadPublicResourceNames
+WARNING: Error reading /home/runner/.gradle/caches/8.9/transforms/bb6a34c82a9b26b08bb4adf8906bbd1b/transformed/play-services-base-18.0.1/public.txt: java.nio.file.NoSuchFileException: /home/runner/.gradle/caches/8.9/transforms/bb6a34c82a9b26b08bb4adf8906bbd1b/transformed/play-services-base-18.0.1/public.txt
+Nov 27, 2026 12:41:56 AM app.cash.paparazzi.internal.resources.AarSourceResourceRepository$Loader loadPublicResourceNames
+WARNING: Error reading /home/runner/.gradle/caches/8.9/transforms/dd6fc456dad3258bf424c17e0d911013/transformed/firebase-common-21.0.0/public.txt: java.nio.file.NoSuchFileException: /home/runner/.gradle/caches/8.9/transforms/dd6fc456dad3258bf424c17e0d911013/transformed/firebase-common-21.0.0/public.txt
+Nov 27, 2026 12:41:56 AM app.cash.paparazzi.internal.resources.AarSourceResourceRepository$Loader loadPublicResourceNames
+WARNING: Error reading /home/runner/.gradle/caches/8.9/transforms/aff730a29cf36c13ab00653c61dea0cc/transformed/play-services-basement-18.3.0/public.txt: java.nio.file.NoSuchFileException: /home/runner/.gradle/caches/8.9/transforms/aff730a29cf36c13ab00653c61dea0cc/transformed/play-services-basement-18.3.0/public.txt
+Nov 27, 2026 12:41:58 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:00 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:00 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:00 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:01 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:01 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:01 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:01 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:02 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:02 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+Nov 27, 2026 12:42:02 AM app.cash.paparazzi.internal.PaparazziLogger logAndroidFramework
+INFO: Settings [3]: Can't get key animator_duration_scale from content://settings/global
+]]></system-err>
+</testsuite>

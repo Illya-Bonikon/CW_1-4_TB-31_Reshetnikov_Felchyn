@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.client.input.KeyChordParserTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:41:45" hostname="runnervm0hi8g" time="0.004">
+  <properties/>
+  <testcase name="single named key without modifiers" classname="com.remotepad.client.input.KeyChordParserTest" time="0.003"/>
+  <testcase name="parses modifiers and key" classname="com.remotepad.client.input.KeyChordParserTest" time="0.001"/>
+  <testcase name="unknown modifier or key gives null" classname="com.remotepad.client.input.KeyChordParserTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

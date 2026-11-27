@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.client.data.HostPCProfileDaoTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:41:45" hostname="runnervm0hi8g" time="0.221">
+  <properties/>
+  <testcase name="same address and port cannot be stored twice" classname="com.remotepad.client.data.HostPCProfileDaoTest" time="0.057"/>
+  <testcase name="hosts are listed from the most recent" classname="com.remotepad.client.data.HostPCProfileDaoTest" time="0.051"/>
+  <testcase name="deleting host removes its sessions" classname="com.remotepad.client.data.HostPCProfileDaoTest" time="0.06"/>
+  <testcase name="create, read, update and delete" classname="com.remotepad.client.data.HostPCProfileDaoTest" time="0.052"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

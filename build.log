@@ -1,0 +1,102 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :mobile-client
+w: file:///home/runner/work/CW_1-4_TB-31_Reshetnikov_Felchyn/CW_1-4_TB-31_Reshetnikov_Felchyn/mobile-client/build.gradle.kts:70:62: 'enableUnitTest: Boolean' is deprecated. Will be removed in AGP 9.0 - Use (variantBuilder as HasHostTestsBuilder).get(HasHostTestsBuilder.UNIT_TEST_TYPE).enable
+
+> Task :pc-server:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared-protocol:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared-protocol:processResources NO-SOURCE
+> Task :pc-server:processResources NO-SOURCE
+> Task :mobile-client:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :mobile-client:preBuild UP-TO-DATE
+> Task :mobile-client:preDebugBuild UP-TO-DATE
+> Task :mobile-client:checkDebugAarMetadata
+> Task :mobile-client:generateDebugResValues
+> Task :mobile-client:mapDebugSourceSetPaths
+> Task :mobile-client:generateDebugResources
+> Task :mobile-client:packageDebugResources
+> Task :mobile-client:mergeDebugResources
+> Task :mobile-client:createDebugCompatibleScreenManifests
+> Task :mobile-client:extractDeepLinksDebug
+> Task :mobile-client:parseDebugLocalResources
+> Task :mobile-client:processDebugMainManifest
+> Task :mobile-client:processDebugManifest
+> Task :mobile-client:processDebugManifestForPackage
+> Task :mobile-client:javaPreCompileDebug
+> Task :shared-protocol:compileKotlin
+> Task :shared-protocol:compileJava NO-SOURCE
+> Task :shared-protocol:classes UP-TO-DATE
+> Task :shared-protocol:jar
+> Task :mobile-client:processDebugResources
+> Task :pc-server:compileKotlin
+> Task :pc-server:compileJava NO-SOURCE
+> Task :pc-server:classes UP-TO-DATE
+> Task :pc-server:jar
+> Task :mobile-client:preparePaparazziDebugResources
+> Task :mobile-client:preDebugUnitTestBuild UP-TO-DATE
+> Task :mobile-client:javaPreCompileDebugUnitTest
+> Task :mobile-client:mergeDebugShaders
+> Task :mobile-client:compileDebugShaders NO-SOURCE
+> Task :mobile-client:generateDebugAssets UP-TO-DATE
+> Task :mobile-client:mergeDebugAssets
+> Task :mobile-client:packageDebugUnitTestForUnitTest
+> Task :mobile-client:generateDebugUnitTestConfig
+> Task :pc-server:processTestResources NO-SOURCE
+> Task :shared-protocol:processTestResources NO-SOURCE
+> Task :shared-protocol:compileTestKotlin
+> Task :pc-server:compileTestKotlin
+> Task :pc-server:startScripts
+> Task :pc-server:compileTestJava NO-SOURCE
+> Task :pc-server:testClasses UP-TO-DATE
+> Task :mobile-client:kspDebugKotlin
+> Task :pc-server:test
+> Task :shared-protocol:compileTestJava NO-SOURCE
+> Task :shared-protocol:testClasses UP-TO-DATE
+> Task :shared-protocol:test
+> Task :pc-server:installDist
+> Task :mobile-client:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :mobile-client:compressDebugAssets
+> Task :mobile-client:desugarDebugFileDependencies
+> Task :mobile-client:mergeDebugJniLibFolders
+> Task :mobile-client:checkDebugDuplicateClasses
+> Task :mobile-client:mergeDebugNativeLibs
+> Task :mobile-client:compileDebugKotlin
+> Task :mobile-client:mergeExtDexDebug
+> Task :mobile-client:compileDebugJavaWithJavac
+> Task :mobile-client:processDebugJavaRes
+> Task :mobile-client:bundleDebugClassesToRuntimeJar
+> Task :mobile-client:bundleDebugClassesToCompileJar
+> Task :mobile-client:dexBuilderDebug
+> Task :mobile-client:mergeDebugGlobalSynthetics
+> Task :mobile-client:mergeLibDexDebug
+> Task :mobile-client:mergeProjectDexDebug
+
+> Task :mobile-client:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so.
+
+> Task :mobile-client:kspDebugUnitTestKotlin
+> Task :mobile-client:validateSigningDebug
+> Task :mobile-client:writeDebugAppMetadata
+> Task :mobile-client:writeDebugSigningConfigVersions
+> Task :mobile-client:mergeDebugJavaResource
+> Task :mobile-client:packageDebug
+> Task :mobile-client:createDebugApkListingFileRedirect
+> Task :mobile-client:assembleDebug
+> Task :mobile-client:compileDebugUnitTestKotlin
+> Task :mobile-client:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :mobile-client:copyRoomSchemas NO-SOURCE
+> Task :mobile-client:processDebugUnitTestJavaRes
+> Task :mobile-client:testDebugUnitTest
+See the Paparazzi report at: file:///home/runner/work/CW_1-4_TB-31_Reshetnikov_Felchyn/CW_1-4_TB-31_Reshetnikov_Felchyn/mobile-client/build/reports/paparazzi/debug/index.html
+
+> Task :mobile-client:test
+> Task :mobile-client:recordPaparazziDebug
+
+> Task :mobile-client:createDebugUnitTestCoverageReport
+View coverage report at file:/home/runner/work/CW_1-4_TB-31_Reshetnikov_Felchyn/CW_1-4_TB-31_Reshetnikov_Felchyn/mobile-client/build/reports/coverage/test/debug/index.html
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1795739869575.json
+
+BUILD SUCCESSFUL in 4m 19s
+58 actionable tasks: 58 executed
+BUILD_OK

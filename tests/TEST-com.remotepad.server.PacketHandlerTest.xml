@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.server.PacketHandlerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:39:40" hostname="runnervm0hi8g" time="0.047">
+  <properties/>
+  <testcase name="events without token do not reach input device" classname="com.remotepad.server.PacketHandlerTest" time="0.007"/>
+  <testcase name="session limit is respected and freed on disconnect" classname="com.remotepad.server.PacketHandlerTest" time="0.022"/>
+  <testcase name="authorized events are dispatched" classname="com.remotepad.server.PacketHandlerTest" time="0.015"/>
+  <testcase name="connection is blocked after too many wrong pins even with correct one" classname="com.remotepad.server.PacketHandlerTest" time="0.0"/>
+  <testcase name="wrong pin is rejected and counted" classname="com.remotepad.server.PacketHandlerTest" time="0.0"/>
+  <testcase name="correct pin gives token and host info" classname="com.remotepad.server.PacketHandlerTest" time="0.0"/>
+  <testcase name="ping is answered with the same timestamp" classname="com.remotepad.server.PacketHandlerTest" time="0.0"/>
+  <testcase name="token of another connection is not accepted" classname="com.remotepad.server.PacketHandlerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.client.data.ConnectionHistoryRepositoryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:41:37" hostname="runnervm0hi8g" time="7.581">
+  <properties/>
+  <testcase name="repeated login updates host instead of duplicating" classname="com.remotepad.client.data.ConnectionHistoryRepositoryTest" time="7.425"/>
+  <testcase name="end session leaves no active one" classname="com.remotepad.client.data.ConnectionHistoryRepositoryTest" time="0.074"/>
+  <testcase name="new login closes previous session" classname="com.remotepad.client.data.ConnectionHistoryRepositoryTest" time="0.082"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

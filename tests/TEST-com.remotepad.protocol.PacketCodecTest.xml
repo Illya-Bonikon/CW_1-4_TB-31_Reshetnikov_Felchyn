@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.protocol.PacketCodecTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:39:41" hostname="runnervm0hi8g" time="0.042">
+  <properties/>
+  <testcase name="move packet survives round trip" classname="com.remotepad.protocol.PacketCodecTest" time="0.026"/>
+  <testcase name="discovery response is parsed" classname="com.remotepad.protocol.PacketCodecTest" time="0.001"/>
+  <testcase name="auth request is nested into text field" classname="com.remotepad.protocol.PacketCodecTest" time="0.0"/>
+  <testcase name="default fields are not sent" classname="com.remotepad.protocol.PacketCodecTest" time="0.001"/>
+  <testcase name="unknown fields from newer version are ignored" classname="com.remotepad.protocol.PacketCodecTest" time="0.012"/>
+  <testcase name="foreign udp message is rejected" classname="com.remotepad.protocol.PacketCodecTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

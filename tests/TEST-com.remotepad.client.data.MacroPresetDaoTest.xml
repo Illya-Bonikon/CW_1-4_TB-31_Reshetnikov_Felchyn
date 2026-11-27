@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.client.data.MacroPresetDaoTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:41:45" hostname="runnervm0hi8g" time="0.145">
+  <properties/>
+  <testcase name="seeding defaults twice keeps user changes" classname="com.remotepad.client.data.MacroPresetDaoTest" time="0.051"/>
+  <testcase name="create, read, update and delete" classname="com.remotepad.client.data.MacroPresetDaoTest" time="0.053"/>
+  <testcase name="frequently used macros go first" classname="com.remotepad.client.data.MacroPresetDaoTest" time="0.041"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

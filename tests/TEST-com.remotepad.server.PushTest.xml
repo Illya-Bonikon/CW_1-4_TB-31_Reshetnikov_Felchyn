@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.server.PushTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:39:40" hostname="runnervm0hi8g" time="0.014">
+  <properties/>
+  <testcase name="messages mention host name" classname="com.remotepad.server.PushTest" time="0.004"/>
+  <testcase name="unexpected drop notifies the phone" classname="com.remotepad.server.PushTest" time="0.001"/>
+  <testcase name="without credentials push is disabled" classname="com.remotepad.server.PushTest" time="0.003"/>
+  <testcase name="client without push token is not notified" classname="com.remotepad.server.PushTest" time="0.0"/>
+  <testcase name="intentional disconnect does not notify" classname="com.remotepad.server.PushTest" time="0.0"/>
+  <testcase name="server shutdown notifies all phones once" classname="com.remotepad.server.PushTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[FCM: файл ключа /no/such/key.json не знайдено, push-сповіщення вимкнено
+]]></system-err>
+</testsuite>

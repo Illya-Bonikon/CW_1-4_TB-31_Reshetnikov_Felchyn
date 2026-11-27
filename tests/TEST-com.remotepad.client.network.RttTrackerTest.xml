@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.client.network.RttTrackerTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:41:51" hostname="runnervm0hi8g" time="0.0">
+  <properties/>
+  <testcase name="first sample is shown as is" classname="com.remotepad.client.network.RttTrackerTest" time="0.0"/>
+  <testcase name="single spike is damped" classname="com.remotepad.client.network.RttTrackerTest" time="0.0"/>
+  <testcase name="clock going backwards does not give negative rtt" classname="com.remotepad.client.network.RttTrackerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

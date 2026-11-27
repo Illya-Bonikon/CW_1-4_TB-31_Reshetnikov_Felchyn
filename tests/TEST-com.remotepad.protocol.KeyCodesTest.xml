@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.protocol.KeyCodesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:39:41" hostname="runnervm0hi8g" time="0.004">
+  <properties/>
+  <testcase name="letters and digits use ascii codes like awt" classname="com.remotepad.protocol.KeyCodesTest" time="0.002"/>
+  <testcase name="named keys are resolved" classname="com.remotepad.protocol.KeyCodesTest" time="0.0"/>
+  <testcase name="unknown key gives null" classname="com.remotepad.protocol.KeyCodesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

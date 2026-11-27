@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.server.PinAuthenticatorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:39:40" hostname="runnervm0hi8g" time="0.006">
+  <properties/>
+  <testcase name="malformed pin is rejected" classname="com.remotepad.server.PinAuthenticatorTest" time="0.0"/>
+  <testcase name="random pin has four digits" classname="com.remotepad.server.PinAuthenticatorTest" time="0.005"/>
+  <testcase name="verifies only exact pin" classname="com.remotepad.server.PinAuthenticatorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.remotepad.client.data.MacroRepositoryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-27T00:41:45" hostname="runnervm0hi8g" time="0.126">
+  <properties/>
+  <testcase name="new macro is normalized and stored" classname="com.remotepad.client.data.MacroRepositoryTest" time="0.049"/>
+  <testcase name="existing macro is updated in place" classname="com.remotepad.client.data.MacroRepositoryTest" time="0.04"/>
+  <testcase name="invalid key sequence is rejected before saving" classname="com.remotepad.client.data.MacroRepositoryTest" time="0.037"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
