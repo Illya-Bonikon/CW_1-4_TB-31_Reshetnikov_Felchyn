@@ -65,7 +65,8 @@ class PacketHandler(
         state.token = null
         smoother.reset()
         val pushToken = info?.pushToken ?: return
-        if (!state.closedByClient && !stopping) notifier.connectionLost(pushToken, hostName)
+        if (state.closedByClient || stopping) return
+        notifier.connectionLost(pushToken, hostName)
     }
 
     /** Викликається перед зупинкою сервера: телефони дізнаються, що ПК вимикається. */

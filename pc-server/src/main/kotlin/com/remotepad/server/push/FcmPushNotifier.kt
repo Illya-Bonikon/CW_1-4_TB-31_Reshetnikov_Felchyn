@@ -28,16 +28,22 @@ class FcmPushNotifier private constructor(private val messaging: FirebaseMessagi
         val messages = tokens.map { token ->
             Message.builder()
                 .setToken(token)
-                .setNotification(Notification.builder().setTitle(message.title).setBody(message.body).build())
+                .setNotification(notification(message))
                 .putData("type", message.type)
                 .putData("host", message.hostName)
-                // високий пріоритет: сповіщення про розрив має прийти, навіть якщо телефон у режимі Doze
-                .setAndroidConfig(AndroidConfig.builder().setPriority(AndroidConfig.Priority.HIGH).build())
+                // високий пріоритет: сповіщення має прийти, навіть якщо телефон у Doze
+                .setAndroidConfig(highPriority)
                 .build()
         }
         runCatching { messaging.sendEach(messages) }
-            .onFailure { System.err.println("FCM: не вдалося надіслати сповіщення: ${it.message}") }
+            .onFailure { System.err.println("FCM: не вдалося надіслати: ${it.message}") }
     }
+
+    private fun notification(message: PushMessage): Notification =
+        Notification.builder().setTitle(message.title).setBody(message.body).build()
+
+    private val highPriority: AndroidConfig =
+        AndroidConfig.builder().setPriority(AndroidConfig.Priority.HIGH).build()
 
     companion object {
         const val CREDENTIALS_ENV = "REMOTEPAD_FCM_CREDENTIALS"

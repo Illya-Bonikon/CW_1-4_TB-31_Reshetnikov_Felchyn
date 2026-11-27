@@ -30,10 +30,13 @@ class NsdHostDiscovery(
             override fun onServiceLost(info: NsdServiceInfo) = Unit
             override fun onDiscoveryStarted(serviceType: String) = Unit
             override fun onDiscoveryStopped(serviceType: String) = Unit
-            override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) { found.close() }
+            override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
+                found.close()
+            }
             override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) = Unit
         }
-        nsd.discoverServices(ProtocolConstants.MDNS_SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, listener)
+        val type = ProtocolConstants.MDNS_SERVICE_TYPE
+        nsd.discoverServices(type, NsdManager.PROTOCOL_DNS_SD, listener)
 
         val hosts = mutableListOf<DiscoveredHost>()
         withTimeoutOrNull(timeoutMs) {
