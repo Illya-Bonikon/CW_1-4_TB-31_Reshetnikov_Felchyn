@@ -9,9 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
@@ -65,9 +65,9 @@ jobs:
   diagrams:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
@@ -75,9 +75,12 @@ jobs:
       # Times New Roman потрібен, щоб підписи на діаграмах збігалися зі шрифтом звіту
       - name: Graphviz and fonts
         run: |
-          echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
           sudo apt-get update -q
-          sudo apt-get install -yq graphviz ttf-mscorefonts-installer
+          sudo apt-get install -yq graphviz fonts-liberation
+          # Times New Roman качається з sourceforge і інколи недоступний; тоді діаграми
+          # рендеряться метрично сумісним Liberation Serif, а збірка не падає
+          echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+          sudo apt-get install -yq ttf-mscorefonts-installer || echo "Times New Roman не встановлено, використовую Liberation Serif"
 
       - name: Render PlantUML
         run: |
