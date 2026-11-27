@@ -65,6 +65,11 @@ android {
     }
 }
 
+// юніт-тести release повторюють debug, а схем бази в їхніх assets немає, тож запускаю тільки debug
+androidComponents {
+    beforeVariants(selector().withBuildType("release")) { it.enableUnitTest = false }
+}
+
 room {
     // схему БД тримаю в репозиторії: з неї видно зміни між версіями, і на ній перевіряються міграції.
     // Плагін Room, а не аргумент KSP: інакше debug і release одночасно пишуть той самий файл схеми
