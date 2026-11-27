@@ -18,6 +18,18 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
+      # ключ Firebase відновлюю із секрету; без секрету збирається версія без push-сповіщень
+      - name: Firebase config from secret
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            echo "$GOOGLE_SERVICES_JSON" | base64 -d > mobile-client/google-services.json
+            echo "google-services.json відновлено"
+          else
+            echo "секрет GOOGLE_SERVICES_JSON не задано, збірка без FCM"
+          fi
+
       - name: Tests, server and APK
         run: ./gradlew --no-daemon --stacktrace test :pc-server:installDist :mobile-client:assembleDebug :mobile-client:recordPaparazziDebug :mobile-client:createDebugUnitTestCoverageReport
 

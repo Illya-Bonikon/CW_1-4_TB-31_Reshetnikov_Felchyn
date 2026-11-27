@@ -1,0 +1,34 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 15
+skinparam ParticipantPadding 4
+skinparam BoxPadding 4
+skinparam roundCorner 6
+hide footbox
+participant "Телефон\n(токен)" as T
+participant "Клієнт\nWebSocket" as W
+participant "Сервер:\nPacketHandler" as P
+participant "FcmPush-\nNotifier" as F
+participant "FCM" as FCM
+participant "Телефон\n(сповіщення)" as S
+
+T -> FCM : отримати токен пристрою
+FCM --> T : pushToken
+W -> P : AUTH_REQUEST (PIN, pushToken)
+P -> P : зберегти pushToken у сесії
+
+alt телефон відключився сам
+  W -> P : DISCONNECT
+  P -> P : push не потрібен
+else зв'язок обірвався
+  P -> F : connectionLost(pushToken, ім'я ПК)
+  F -> FCM : HTTP v1 send
+  FCM -> S : сповіщення «зв'язок втрачено»
+else сервер зупиняють
+  P -> F : hostStopped(усі pushToken)
+  F -> FCM : sendEach
+  FCM -> S : сповіщення «ПК відключився»
+end
+@enduml

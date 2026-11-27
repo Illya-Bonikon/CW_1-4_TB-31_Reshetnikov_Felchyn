@@ -3,8 +3,15 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
     // знімки екранів Compose без емулятора, ними ж ілюстровано звіт
     alias(libs.plugins.paparazzi)
+}
+
+// Ключ Firebase (google-services.json) у репозиторій не потрапляє. Якщо файл поклали локально
+// або CI відновив його з секрету, вмикаю плагін; без файлу збирається версія без push-сповіщень.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
 }
 
 android {
@@ -42,6 +49,15 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        // Robolectric і MigrationTestHelper читають ресурси й схеми бази з assets
+        unitTests.isIncludeAndroidResources = true
+    }
+    sourceSets {
+        // MigrationTestHelper читає схеми з assets. Robolectric бачить лише assets варіанта debug,
+        // тому схеми (кілька кілобайтів JSON) потрапляють тільки в налагоджувальну збірку
+        getByName("debug").assets.srcDir("$projectDir/schemas")
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -49,9 +65,15 @@ android {
     }
 }
 
-ksp {
-    // схему БД тримаю в репозиторії, щоб бачити, як вона змінюється між версіями
-    arg("room.schemaLocation", "$projectDir/schemas")
+// юніт-тести release повторюють debug, а схем бази в їхніх assets немає, тож запускаю тільки debug
+androidComponents {
+    beforeVariants(selector().withBuildType("release")) { it.enableUnitTest = false }
+}
+
+room {
+    // схему БД тримаю в репозиторії: з неї видно зміни між версіями, і на ній перевіряються міграції.
+    // Плагін Room, а не аргумент KSP: інакше debug і release одночасно пишуть той самий файл схеми
+    schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
@@ -77,11 +99,18 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.okhttp)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
     // справжній сервер для наскрізного тесту на loopback
     testImplementation(project(":pc-server"))
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.junit)
+    testImplementation(libs.androidx.room.testing)
     debugImplementation(libs.androidx.ui.tooling)
 }

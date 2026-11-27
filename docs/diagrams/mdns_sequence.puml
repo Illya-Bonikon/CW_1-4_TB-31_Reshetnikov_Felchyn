@@ -1,0 +1,34 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 15
+skinparam ParticipantPadding 4
+skinparam roundCorner 6
+hide footbox
+participant "Connect-\nViewModel" as VM
+participant "Composite-\nDiscovery" as C
+participant "NSD\n(телефон)" as N
+participant "UDP\n(телефон)" as U
+participant "JmDNS\n(ПК)" as M
+participant "UDP\n(ПК)" as R
+
+== Запуск сервера ==
+M -> M : registerService(\n_remotepad._tcp, порт, name)
+
+== Пошук на телефоні ==
+VM -> C : discover()
+par
+  C -> N : discover()
+  N -> M : запит PTR
+  M --> N : відповідь: ім'я сервісу
+  N -> M : resolve: SRV, TXT, A
+  M --> N : IP, порт, name
+else
+  C -> U : discover()
+  U -> R : broadcast DISCOVER
+  R --> U : HOST;ім'я;порт
+end
+C -> C : об'єднання, без дублікатів за IP
+C --> VM : список ПК
+@enduml

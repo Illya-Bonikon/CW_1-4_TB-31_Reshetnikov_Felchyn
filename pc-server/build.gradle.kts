@@ -17,6 +17,8 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.websockets)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.jmdns)
+    implementation(libs.firebase.admin)
     runtimeOnly(libs.slf4j.simple)
 
     testImplementation(libs.kotlin.test)

@@ -1,11 +1,13 @@
 package com.remotepad.client.data.local
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.Index
+import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Upsert
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 /** ПК, до якого телефон уже підключався. Унікальність за адресою і портом, щоб не плодити дублікати. */
@@ -23,8 +25,14 @@ data class HostPCProfile(
 
 @Dao
 interface HostPCProfileDao {
+    @Insert
+    suspend fun insert(host: HostPCProfile): Long
+
     @Query("SELECT * FROM host_profiles ORDER BY lastConnected DESC")
     fun observeAll(): Flow<List<HostPCProfile>>
+
+    @Query("SELECT * FROM host_profiles WHERE id = :id")
+    suspend fun getById(id: Long): HostPCProfile?
 
     @Query(
         "SELECT * FROM host_profiles " +
@@ -32,9 +40,13 @@ interface HostPCProfileDao {
     )
     suspend fun find(ip: String, port: Int): HostPCProfile?
 
-    @Upsert
-    suspend fun upsert(host: HostPCProfile): Long
+    @Update
+    suspend fun update(host: HostPCProfile): Int
 
+    @Delete
+    suspend fun delete(host: HostPCProfile): Int
+
+    // сесії цього ПК зникнуть разом із ним завдяки ON DELETE CASCADE
     @Query("DELETE FROM host_profiles WHERE id = :id")
-    suspend fun delete(id: Long)
+    suspend fun deleteById(id: Long): Int
 }

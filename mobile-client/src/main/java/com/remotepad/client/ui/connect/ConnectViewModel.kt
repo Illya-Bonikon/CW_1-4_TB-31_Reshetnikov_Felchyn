@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.remotepad.client.AppContainer
-import com.remotepad.client.data.local.DeviceSession
 import com.remotepad.client.data.local.HostPCProfile
 import com.remotepad.client.input.PinValidator
 import com.remotepad.client.network.AuthResult
@@ -40,7 +39,7 @@ class ConnectViewModel(private val container: AppContainer) : ViewModel() {
     private val _state = MutableStateFlow(ConnectUiState())
     val state: StateFlow<ConnectUiState> = _state.asStateFlow()
 
-    val savedHosts: StateFlow<List<HostPCProfile>> = container.database.hosts().observeAll()
+    val savedHosts: StateFlow<List<HostPCProfile>> = container.history.savedHosts
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     init {
@@ -67,7 +66,7 @@ class ConnectViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     fun forgetHost(id: Long) {
-        viewModelScope.launch { container.database.hosts().delete(id) }
+        viewModelScope.launch { container.history.forget(id) }
     }
 
     fun connect(onSuccess: () -> Unit) {
@@ -80,7 +79,14 @@ class ConnectViewModel(private val container: AppContainer) : ViewModel() {
             val result = container.connection.connect(HostTarget(current.ip, port), current.pin, container.deviceName)
             when (result) {
                 is AuthResult.Success -> {
-                    saveHost(current.ip, port, result)
+                    container.history.recordLogin(
+                        ip = current.ip,
+                        port = port,
+                        hostName = result.hostName,
+                        token = result.token,
+                        deviceName = container.deviceName,
+                        now = System.currentTimeMillis()
+                    )
                     _state.update { it.copy(isConnecting = false, pin = "") }
                     onSuccess()
                 }
@@ -88,26 +94,16 @@ class ConnectViewModel(private val container: AppContainer) : ViewModel() {
                     it.copy(isConnecting = false, error = result.message, wrongPin = true, pin = "")
                 }
                 is AuthResult.Unreachable -> _state.update {
-                    it.copy(isConnecting = false, error = "${result.message}. Перевірте, що ПК і телефон в одній мережі Wi-Fi, або введіть IP вручну")
+                    it.copy(isConnecting = false, error = "${result.message}. $UNREACHABLE_HINT")
                 }
             }
         }
     }
 
-    private suspend fun saveHost(ip: String, port: Int, result: AuthResult.Success) {
-        val hosts = container.database.hosts()
-        val existing = hosts.find(ip, port)
-        val profile = (existing ?: HostPCProfile(hostName = result.hostName, ipAddress = ip, port = port))
-            .copy(hostName = result.hostName, lastConnected = System.currentTimeMillis())
-        val id = existing?.id ?: hosts.upsert(profile)
-        if (existing != null) hosts.upsert(profile)
-
-        val sessions = container.database.sessions()
-        sessions.deactivateAll()
-        sessions.insert(DeviceSession(result.token, id, container.deviceName, System.currentTimeMillis(), isActive = true))
-    }
-
     companion object {
+        private const val UNREACHABLE_HINT =
+            "Перевірте, що ПК і телефон в одній мережі Wi-Fi, або введіть IP вручну"
+
         fun factory(container: AppContainer) = viewModelFactory {
             initializer { ConnectViewModel(container) }
         }

@@ -9,14 +9,12 @@ import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.SocketTimeoutException
 
-data class DiscoveredHost(val hostName: String, val ip: String, val port: Int)
-
 /** Шукає сервери RemotePad широкомовним UDP-запитом і збирає відповіді протягом тайм-ауту. */
-class HostDiscovery(
+class UdpHostDiscovery(
     private val port: Int = ProtocolConstants.DEFAULT_PORT,
     private val timeoutMs: Int = 1500
-) {
-    suspend fun discover(): List<DiscoveredHost> = withContext(Dispatchers.IO) {
+) : HostDiscoverySource {
+    override suspend fun discover(): List<DiscoveredHost> = withContext(Dispatchers.IO) {
         val found = linkedMapOf<String, DiscoveredHost>()
         DatagramSocket().use { socket ->
             socket.broadcast = true

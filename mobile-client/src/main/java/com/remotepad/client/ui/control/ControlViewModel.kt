@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.remotepad.client.AppContainer
-import com.remotepad.client.data.local.DefaultMacros
+import com.remotepad.client.data.InvalidMacroException
 import com.remotepad.client.data.local.MacroPreset
 import com.remotepad.client.input.GestureTranslator
 import com.remotepad.client.input.KeyChordParser
@@ -31,11 +31,11 @@ class ControlViewModel(private val container: AppContainer) : ViewModel() {
 
     val status: StateFlow<ConnectionStatus> = connection.status
     val rttMs: StateFlow<Long?> = connection.rttMs
-    val macros: StateFlow<List<MacroPreset>> = container.database.macros().observeAll()
+    val macros: StateFlow<List<MacroPreset>> = container.macros.macros
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     init {
-        viewModelScope.launch { container.database.macros().insertAll(DefaultMacros.all) }
+        viewModelScope.launch { container.macros.seedDefaults() }
         viewModelScope.launch {
             container.settings.preferences.collect { translator.preference = it }
         }
@@ -76,12 +76,27 @@ class ControlViewModel(private val container: AppContainer) : ViewModel() {
     fun media(action: MediaAction) = send(InputEventPacket(type = EventType.MEDIA_ACTION, mediaAction = action))
 
     fun runMacro(preset: MacroPreset) {
-        KeyChordParser.parse(preset.keySequence)?.let { pressKey(it.keyCode, it.modifiers) }
+        val chord = KeyChordParser.parse(preset.keySequence) ?: return
+        pressKey(chord.keyCode, chord.modifiers)
+        viewModelScope.launch { container.macros.recordUse(preset.macroId) }
+    }
+
+    /** Повертає текст помилки для редактора або null, якщо макрос збережено. */
+    suspend fun saveMacro(title: String, keySequence: String, existing: MacroPreset?): String? =
+        try {
+            container.macros.save(title, keySequence, existing)
+            null
+        } catch (e: InvalidMacroException) {
+            e.message
+        }
+
+    fun deleteMacro(preset: MacroPreset) {
+        viewModelScope.launch { container.macros.delete(preset) }
     }
 
     fun disconnect() {
         connection.disconnect()
-        viewModelScope.launch { container.database.sessions().deactivateAll() }
+        viewModelScope.launch { container.history.endSession(System.currentTimeMillis()) }
     }
 
     // накопичений рух після розриву вже неактуальний: відправлений пізніше, він смикне курсор

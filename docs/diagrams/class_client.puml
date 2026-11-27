@@ -66,9 +66,12 @@ package "network" {
   class RttTracker {
     +onPong(sentAtMs : Long, receivedAtMs : Long) : Long
   }
-  class HostDiscovery {
+  interface HostDiscoverySource {
     +discover() : List<DiscoveredHost>
   }
+  class CompositeHostDiscovery
+  class UdpHostDiscovery
+  class NsdHostDiscovery
 }
 
 package "data" {
@@ -82,6 +85,18 @@ package "data" {
     smoothingFactor : Float
     reverseScroll : Boolean
   }
+  class ConnectionHistoryRepository {
+    +savedHosts : Flow<List<HostPCProfile>>
+    +recordLogin(...) : Long
+    +endSession(now : Long)
+    +forget(hostId : Long)
+  }
+  class MacroRepository {
+    +macros : Flow<List<MacroPreset>>
+    +save(title, keySequence, existing) : MacroPreset
+    +recordUse(macroId : String)
+    +delete(preset : MacroPreset)
+  }
   class RemotePadDatabase {
     +hosts() : HostPCProfileDao
     +sessions() : DeviceSessionDao
@@ -89,12 +104,28 @@ package "data" {
   }
 }
 
+package "push" {
+  interface PushTokenProvider {
+    +token() : String?
+  }
+  class FirebasePushTokenProvider
+}
+
 class AppContainer
 
-AppContainer *-- RemotePadDatabase
+AppContainer *-- ConnectionHistoryRepository
+AppContainer *-- MacroRepository
 AppContainer *-- SettingsRepository
 AppContainer *-- RemotePadConnection
-AppContainer *-- HostDiscovery
+AppContainer *-- HostDiscoverySource
+ConnectionHistoryRepository --> RemotePadDatabase
+MacroRepository --> RemotePadDatabase
+CompositeHostDiscovery ..|> HostDiscoverySource
+UdpHostDiscovery ..|> HostDiscoverySource
+NsdHostDiscovery ..|> HostDiscoverySource
+CompositeHostDiscovery o-- HostDiscoverySource
+FirebasePushTokenProvider ..|> PushTokenProvider
+WebSocketConnection --> PushTokenProvider
 
 WebSocketConnection ..|> RemotePadConnection
 WebSocketConnection *-- RttTracker

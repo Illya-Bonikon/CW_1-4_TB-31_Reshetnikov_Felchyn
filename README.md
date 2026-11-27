@@ -40,6 +40,20 @@ docs/              звіти до пунктів 1-4 і діаграми PlantU
 
 Після запуску застосунок сам шукає сервер у мережі. Якщо пошук заблоковано брандмауером, IP-адресу можна ввести вручну.
 
+## Push-сповіщення (Firebase Cloud Messaging)
+
+Без ключів проєкт збирається і працює, лише без сповіщень. Ключі в репозиторій не комітяться.
+
+1. Створіть проєкт у [консолі Firebase](https://console.firebase.google.com/) і додайте Android-застосунок `com.remotepad.client`.
+2. Завантажте `google-services.json` у `mobile-client/` (файл є в `.gitignore`). Плагін `google-services` вмикається, лише коли цей файл існує.
+3. Для CI додайте секрет репозиторію `GOOGLE_SERVICES_JSON` зі вмістом файлу в base64: `base64 -i mobile-client/google-services.json | pbcopy` (macOS) або `base64 -w0 ...` (Linux).
+4. Для сервера згенеруйте в Firebase ключ сервісного акаунта (Project settings, Service accounts), збережіть поза репозиторієм, наприклад у `~/.config/remotepad/`, і перед запуском вкажіть шлях:
+
+```bash
+export REMOTEPAD_FCM_CREDENTIALS=~/.config/remotepad/firebase-service-account.json
+./gradlew :pc-server:run
+```
+
 ## Тести
 
 ```bash

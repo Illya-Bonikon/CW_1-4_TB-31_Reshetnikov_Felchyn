@@ -1,0 +1,44 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+hide circle
+skinparam linetype ortho
+
+entity "host_profiles" as H {
+  * id : INTEGER <<PK, AUTOINCREMENT>>
+  --
+  * hostName : TEXT
+  * ipAddress : TEXT
+  * port : INTEGER
+  * lastConnected : INTEGER
+  ..
+  UNIQUE (ipAddress, port)
+}
+
+entity "device_sessions" as S {
+  * sessionToken : TEXT <<PK>>
+  --
+  * hostId : INTEGER <<FK>>
+  * deviceName : TEXT
+  * authTime : INTEGER
+  * isActive : INTEGER
+  endTime : INTEGER  (v2)
+  ..
+  INDEX (hostId)
+}
+
+entity "macro_presets" as M {
+  * macroId : TEXT <<PK>>
+  --
+  * title : TEXT
+  * keySequence : TEXT
+  * iconType : TEXT
+  * category : TEXT
+  * usageCount : INTEGER = 0  (v2)
+}
+
+H ||--o{ S : "hostId → id\nON DELETE CASCADE"
+@enduml
