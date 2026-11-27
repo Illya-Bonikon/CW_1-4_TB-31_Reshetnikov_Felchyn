@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+start
+:Оновлений застосунок відкриває remotepad.db;
+:Room читає user_version у файлі бази;
+if (Версія файлу = версії в коді?) then (так)
+  :перевірка identity hash схеми;
+else (ні, наприклад 1 < 2)
+  :пошук ланцюжка міграцій\nу Migrations.ALL;
+  if (Ланцюжок знайдено?) then (так)
+    :MIGRATION_1_2:\nALTER TABLE macro_presets\nADD COLUMN usageCount;
+    :ALTER TABLE device_sessions\nADD COLUMN endTime;
+    :user_version = 2;
+  else (ні)
+    #white:IllegalStateException;
+    note right
+      fallbackToDestructiveMigration
+      свідомо не використано:
+      краще помилка в тестах,
+      ніж втрачені дані користувача
+    end note
+    stop
+  endif
+endif
+:База готова, дані збережено;
+stop
+@enduml

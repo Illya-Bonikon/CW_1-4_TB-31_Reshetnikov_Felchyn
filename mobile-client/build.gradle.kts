@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
     // знімки екранів Compose без емулятора, ними ж ілюстровано звіт
     alias(libs.plugins.paparazzi)
 }
@@ -62,9 +63,10 @@ android {
     }
 }
 
-ksp {
-    // схему БД тримаю в репозиторії, щоб бачити, як вона змінюється між версіями
-    arg("room.schemaLocation", "$projectDir/schemas")
+room {
+    // схему БД тримаю в репозиторії: з неї видно зміни між версіями, і на ній перевіряються міграції.
+    // Плагін Room, а не аргумент KSP: інакше debug і release одночасно пишуть той самий файл схеми
+    schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {

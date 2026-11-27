@@ -11,7 +11,7 @@ node "Смартфон (Android 8.0+)" as Phone {
     [UI (Jetpack Compose):\nConnectScreen, TouchpadScreen,\nKeyboardScreen, MediaScreen,\nMacrosScreen, SettingsScreen] as UI
     [ViewModel:\nConnectViewModel,\nControlViewModel,\nSettingsViewModel] as VM
     [Обробка введення:\nGestureTranslator,\nMoveAccumulator, KeyChordParser] as Input
-    [Мережа:\nWebSocketConnection,\nHostDiscovery, RttTracker] as Net
+    [Мережа:\nWebSocketConnection, RttTracker,\nUDP і NSD-пошук] as Net
     [Дані:\nRoom (SQLite), DataStore] as Data
   }
   [shared-protocol\n(InputEventPacket, PacketCodec)] as ProtoC
@@ -25,6 +25,8 @@ node "Персональний комп'ютер (JVM 17)" as PC {
     [PinAuthenticator,\nSessionRegistry] as Auth
     [CursorSmoother] as Smooth
     [AwtRobotInputDevice] as Robot
+    [MdnsAdvertiser\n(JmDNS)] as Mdns
+    [FcmPushNotifier] as Push
   }
   [shared-protocol] as ProtoS
 }
@@ -38,6 +40,9 @@ VM --> Data
 Net ..> ProtoC : кодування JSON
 Net --> WS : WebSocket ws://IP:8080/control
 Net --> UDP : UDP broadcast :8080
+Net --> Mdns : mDNS _remotepad._tcp
+Handler --> Push
+Push --> [Firebase Cloud\nMessaging] : HTTP v1
 WS --> Handler
 WS ..> ProtoS
 Handler --> Auth

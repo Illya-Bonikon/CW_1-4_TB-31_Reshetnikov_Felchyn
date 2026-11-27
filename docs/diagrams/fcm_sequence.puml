@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam defaultFontSize 13
+skinparam roundCorner 6
+hide footbox
+participant "Телефон:\nFirebasePushTokenProvider" as T
+participant "WebSocketConnection" as W
+participant "PacketHandler,\nSessionRegistry" as P
+participant "FcmPushNotifier\n(Firebase Admin SDK)" as F
+participant "Firebase Cloud\nMessaging" as FCM
+participant "Телефон:\nRemotePadMessagingService" as S
+
+T -> FCM : отримати токен пристрою
+FCM --> T : pushToken
+W -> P : AUTH_REQUEST (PIN, pushToken)
+P -> P : зберегти pushToken у сесії
+
+alt телефон відключився сам
+  W -> P : DISCONNECT
+  P -> P : closedByClient = true, push не потрібен
+else зв'язок обірвався (Wi-Fi, сон телефона)
+  P -> F : connectionLost(pushToken, ім'я ПК)
+  F -> FCM : HTTP v1 send (ключ сервісного акаунта)
+  FCM -> S : сповіщення «зв'язок втрачено»
+else сервер зупиняють (Ctrl+C, вимкнення ПК)
+  P -> F : hostStopped(усі pushToken)
+  F -> FCM : sendEach
+  FCM -> S : сповіщення «ПК відключився»
+end
+@enduml
