@@ -7,6 +7,12 @@ plugins {
     alias(libs.plugins.paparazzi)
 }
 
+// Ключ Firebase (google-services.json) у репозиторій не потрапляє. Якщо файл поклали локально
+// або CI відновив його з секрету, вмикаю плагін; без файлу збирається версія без push-сповіщень.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 android {
     namespace = "com.remotepad.client"
     compileSdk = 34
@@ -41,6 +47,13 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    testOptions {
+        // Robolectric і MigrationTestHelper читають ресурси й схеми бази з assets
+        unitTests.isIncludeAndroidResources = true
+    }
+    sourceSets {
+        getByName("test").assets.srcDir("$projectDir/schemas")
     }
     packaging {
         resources {
@@ -77,11 +90,18 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.okhttp)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlinx.coroutines.test)
     // справжній сервер для наскрізного тесту на loopback
     testImplementation(project(":pc-server"))
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.junit)
+    testImplementation(libs.androidx.room.testing)
     debugImplementation(libs.androidx.ui.tooling)
 }

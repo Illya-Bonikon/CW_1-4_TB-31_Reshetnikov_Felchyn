@@ -1,5 +1,6 @@
 package com.remotepad.client.network
 
+import com.remotepad.client.push.PushTokenProvider
 import com.remotepad.protocol.AuthRequest
 import com.remotepad.protocol.EventType
 import com.remotepad.protocol.InputEventPacket
@@ -32,7 +33,8 @@ class WebSocketConnection(
     private val client: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(AUTH_TIMEOUT_MS, TimeUnit.MILLISECONDS)
         .build(),
-    private val clock: () -> Long = System::currentTimeMillis
+    private val clock: () -> Long = System::currentTimeMillis,
+    private val pushTokens: PushTokenProvider = PushTokenProvider { null }
 ) : RemotePadConnection {
 
     private val _status = MutableStateFlow<ConnectionStatus>(ConnectionStatus.Disconnected)
@@ -71,12 +73,15 @@ class WebSocketConnection(
 
     override fun disconnect() {
         lastAttempt = null
+        // сервер має знати, що розрив навмисний, інакше надішле push «зв'язок втрачено»
+        if (token != null) socket?.send(PacketCodec.encode(InputEventPacket(type = EventType.DISCONNECT)))
         closeSocket()
         _status.value = ConnectionStatus.Disconnected
     }
 
     private suspend fun open(target: HostTarget, pin: String, deviceName: String): AuthResult {
         closeSocket()
+        val pushToken = pushTokens.token()
         val myGeneration = generation.incrementAndGet()
         val auth = CompletableDeferred<AuthResult>()
         val request = Request.Builder()
@@ -85,7 +90,12 @@ class WebSocketConnection(
 
         val ws = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
-                val body = AuthRequest(deviceName = deviceName, clientIp = LocalAddress.siteLocalIpv4(), pinCode = pin)
+                val body = AuthRequest(
+                    deviceName = deviceName,
+                    clientIp = LocalAddress.siteLocalIpv4(),
+                    pinCode = pin,
+                    pushToken = pushToken
+                )
                 webSocket.send(PacketCodec.encode(
                     InputEventPacket(type = EventType.AUTH_REQUEST, text = PacketCodec.encodeAuthRequest(body))
                 ))

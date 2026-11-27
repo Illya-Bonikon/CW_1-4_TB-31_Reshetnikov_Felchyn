@@ -1,0 +1,61 @@
+name: export
+
+on:
+  push:
+    branches: [wip]
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+      - name: Fonts
+        run: |
+          echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+          sudo apt-get update -q
+          sudo apt-get install -yq graphviz ttf-mscorefonts-installer
+      - name: Build
+        continue-on-error: true
+        run: |
+          test -f gradlew || gradle wrapper --gradle-version 8.9
+          set -o pipefail
+          ./gradlew --no-daemon test :pc-server:installDist :mobile-client:assembleDebug :mobile-client:recordPaparazziDebug :mobile-client:createDebugUnitTestCoverageReport 2>&1 | tee build.log
+          echo "BUILD_OK" >> build.log
+      - name: Diagrams
+        continue-on-error: true
+        run: |
+          curl -sSL -o /tmp/plantuml.jar https://github.com/plantuml/plantuml/releases/download/v1.2024.7/plantuml-1.2024.7.jar
+          java -Djava.awt.headless=true -jar /tmp/plantuml.jar -charset UTF-8 -tpng -Sdpi=200 -o rendered docs/diagrams/*.puml 2>&1 | tee diagrams.log
+      - name: Publish to ci-output
+        if: always()
+        run: |
+          mkdir -p /tmp/out/wrapper /tmp/out/tests /tmp/out/apk
+          cp build.log diagrams.log /tmp/out/ 2>/dev/null || true
+          cp gradlew gradlew.bat /tmp/out/wrapper/ 2>/dev/null || true
+          cp -r gradle/wrapper /tmp/out/wrapper/ 2>/dev/null || true
+          cp -r docs/diagrams/rendered /tmp/out/diagrams 2>/dev/null || true
+          find . -path '*/build/test-results/*' -name '*.xml' -exec cp {} /tmp/out/tests/ \;
+          cp mobile-client/build/outputs/apk/debug/*.apk /tmp/out/apk/ 2>/dev/null || true
+          cp -r mobile-client/schemas /tmp/out/schemas 2>/dev/null || true
+          cp -r mobile-client/src/test/snapshots /tmp/out/snapshots 2>/dev/null || true
+          cp -r mobile-client/build/measurements /tmp/out/measurements 2>/dev/null || true
+          cp mobile-client/build/reports/coverage/test/debug/report.xml /tmp/out/coverage.xml 2>/dev/null || true
+          find . -path '*/build/test-results/*' -name '*.xml' | sed 's|^./||' > /tmp/out/test_files.txt
+          find mobile-client/build/reports/paparazzi -name '*.png' | head -50 > /tmp/out/paparazzi_report_files.txt || true
+          cd /tmp/out
+          git init -q -b ci-output
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "ci output for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" ci-output

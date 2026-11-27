@@ -98,7 +98,9 @@ data class AuthRequest(
     val deviceName: String,
     val clientIp: String,
     val pinCode: String,
-    val clientVersion: String = "1.0.0"
+    val clientVersion: String = "1.0.0",
+    // токен Firebase Cloud Messaging; старі клієнти поле не шлють, і сервер просто не надсилає їм push
+    val pushToken: String? = null
 )
 
 /**

@@ -11,6 +11,10 @@ object ProtocolConstants {
     const val DISCOVERY_REQUEST = "REMOTEPAD_DISCOVER"
     const val DISCOVERY_RESPONSE_PREFIX = "REMOTEPAD_HOST"
 
+    // тип сервісу DNS-SD; Android NsdManager приймає його без ".local."
+    const val MDNS_SERVICE_TYPE = "_remotepad._tcp"
+    const val MDNS_ATTR_NAME = "name"
+
     const val PIN_LENGTH = 4
 
     // Біти поля modifiers у InputEventPacket

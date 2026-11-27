@@ -72,3 +72,18 @@ class KeyCodesTest {
         assertNull(KeyCodes.byName("ї"))
     }
 }
+
+class AuthRequestCompatibilityTest {
+
+    @Test
+    fun `push token survives round trip`() {
+        val request = AuthRequest("Pixel", "10.0.0.2", "4812", pushToken = "fcm-token")
+        assertEquals("fcm-token", PacketCodec.decodeAuthRequest(PacketCodec.encodeAuthRequest(request)).pushToken)
+    }
+
+    @Test
+    fun `request from older client without push token is accepted`() {
+        val old = """{"deviceName":"Pixel","clientIp":"10.0.0.2","pinCode":"4812"}"""
+        assertNull(PacketCodec.decodeAuthRequest(old).pushToken)
+    }
+}

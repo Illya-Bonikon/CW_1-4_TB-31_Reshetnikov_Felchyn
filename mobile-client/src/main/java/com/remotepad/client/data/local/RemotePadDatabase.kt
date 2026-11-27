@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [HostPCProfile::class, DeviceSession::class, MacroPreset::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class RemotePadDatabase : RoomDatabase() {
@@ -16,7 +16,11 @@ abstract class RemotePadDatabase : RoomDatabase() {
     abstract fun macros(): MacroPresetDao
 
     companion object {
+        const val NAME = "remotepad.db"
+
         fun create(context: Context): RemotePadDatabase =
-            Room.databaseBuilder(context, RemotePadDatabase::class.java, "remotepad.db").build()
+            Room.databaseBuilder(context, RemotePadDatabase::class.java, NAME)
+                .addMigrations(*Migrations.ALL)
+                .build()
     }
 }

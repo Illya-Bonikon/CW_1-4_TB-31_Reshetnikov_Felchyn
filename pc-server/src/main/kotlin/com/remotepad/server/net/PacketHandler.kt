@@ -8,12 +8,16 @@ import com.remotepad.server.auth.PinAuthenticator
 import com.remotepad.server.auth.SessionRegistry
 import com.remotepad.server.input.CursorSmoother
 import com.remotepad.server.input.InputDevice
+import com.remotepad.server.push.NoopPushNotifier
+import com.remotepad.server.push.PushNotifier
 import kotlin.math.roundToInt
 
 /** Стан одного WebSocket-з'єднання: токен і лічильник помилкових PIN. */
 class ConnectionState {
     var token: String? = null
     var failedAttempts = 0
+    // телефон сам надіслав DISCONNECT, тож сповіщати його про розрив не треба
+    var closedByClient = false
 }
 
 /**
@@ -28,8 +32,10 @@ class PacketHandler(
     private val hostName: String,
     private val screenWidth: Int,
     private val screenHeight: Int,
-    private val maxPinAttempts: Int = 5
+    private val maxPinAttempts: Int = 5,
+    private val notifier: PushNotifier = NoopPushNotifier
 ) {
+    @Volatile private var stopping = false
 
     /** Повертає відповідь для клієнта або null, якщо відповідати нема чого. */
     fun handle(packet: InputEventPacket, state: ConnectionState): InputEventPacket? {
@@ -41,6 +47,10 @@ class PacketHandler(
                 sequenceNumber = packet.sequenceNumber,
                 timestamp = packet.timestamp
             )
+            EventType.DISCONNECT -> {
+                state.closedByClient = true
+                return null
+            }
             else -> Unit
         }
 
@@ -51,9 +61,17 @@ class PacketHandler(
     }
 
     fun onDisconnect(state: ConnectionState) {
-        state.token?.let(sessions::close)
+        val info = state.token?.let(sessions::close)
         state.token = null
         smoother.reset()
+        val pushToken = info?.pushToken ?: return
+        if (!state.closedByClient && !stopping) notifier.connectionLost(pushToken, hostName)
+    }
+
+    /** Викликається перед зупинкою сервера: телефони дізнаються, що ПК вимикається. */
+    fun onServerStopping() {
+        stopping = true
+        notifier.hostStopped(sessions.pushTokens(), hostName)
     }
 
     fun isBlocked(state: ConnectionState): Boolean = state.failedAttempts >= maxPinAttempts
@@ -68,7 +86,7 @@ class PacketHandler(
                 AuthResponse(isSuccess = false, errorMessage = "Невірний PIN-код")
             }
             else -> {
-                val token = sessions.open(request.deviceName)
+                val token = sessions.open(request.deviceName, request.pushToken)
                 if (token == null) {
                     AuthResponse(isSuccess = false, errorMessage = "Досягнуто ліміту підключених пристроїв")
                 } else {

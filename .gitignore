@@ -15,6 +15,11 @@ captures/
 # Рендер діаграм робить CI, у репозиторії лишаються лише .puml
 docs/diagrams/rendered/
 
+# Ключі Firebase зберігаються лише локально і в GitHub Secrets
+google-services.json
+*service-account*.json
+*firebase-adminsdk*.json
+
 # Генератор звіту і довідкові матеріали живуть локально
 report/
 reference_materials/

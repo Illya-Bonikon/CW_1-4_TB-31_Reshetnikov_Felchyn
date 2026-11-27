@@ -15,6 +15,7 @@ import com.remotepad.client.ui.connect.ConnectUiState
 import com.remotepad.client.ui.control.ControlMode
 import com.remotepad.client.ui.control.ControlScaffold
 import com.remotepad.client.ui.control.KeyboardContent
+import com.remotepad.client.ui.control.MacroEditor
 import com.remotepad.client.ui.control.MacrosContent
 import com.remotepad.client.ui.control.MediaContent
 import com.remotepad.client.ui.control.TouchpadContent
@@ -69,7 +70,17 @@ class ScreenshotTest {
     fun media() = control(ControlMode.MEDIA) { MediaContent {} }
 
     @Test
-    fun macros() = control(ControlMode.MACROS) { MacrosContent(DefaultMacros.all) {} }
+    fun macros() = control(ControlMode.MACROS) { MacrosContent(DefaultMacros.all, onRun = {}) }
+
+    @Test
+    fun macroEditor() = control(ControlMode.MACROS) {
+        MacrosContent(DefaultMacros.all, onRun = {})
+        MacroEditor(
+            isNew = true, title = "Диспетчер задач", sequence = "CTRL+SHIFT+F13",
+            error = "Невідома комбінація, приклад: CTRL+SHIFT+T",
+            onTitleChange = {}, onSequenceChange = {}, onSave = {}, onDelete = null, onCancel = {}
+        )
+    }
 
     @Test
     fun settings() = control(ControlMode.SETTINGS) {
